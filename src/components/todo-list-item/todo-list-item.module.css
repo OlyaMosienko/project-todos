@@ -1,0 +1,6 @@
+.item {
+	padding: 10px 0;
+}
+.item + .item {
+	border-top: 1px solid #ccc;
+}

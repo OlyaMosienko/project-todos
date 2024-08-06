@@ -10,6 +10,6 @@ body {
 	font-family: 'JetBrains Mono', monospace;
 	display: flex;
 	justify-content: center;
-	background: #030018;
-	height: 100vh;
+	background: #040024;
+	min-height: 100vh;
 }

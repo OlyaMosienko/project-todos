@@ -4,3 +4,37 @@
 .item + .item {
 	border-top: 1px solid #ccc;
 }
+.item-updating {
+	opacity: 0.5;
+}
+.item-content {
+	display: inline-flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 15px;
+	width: 95%;
+}
+
+.buttons {
+	display: flex;
+	gap: 7px;
+}
+
+.button {
+	font-family: inherit;
+	border: none;
+	background: #571db4;
+	color: #fff;
+	padding: 7px;
+	cursor: pointer;
+}
+.completed {
+	background: limegreen;
+}
+.button:hover,
+.button:disabled {
+	opacity: 0.75;
+}
+.delete-todo-btn {
+	background: #7d7d7d;
+}

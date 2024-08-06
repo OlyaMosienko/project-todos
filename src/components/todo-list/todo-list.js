@@ -1,31 +1,53 @@
-import { useState, useEffect } from 'react';
-import { TodoListItem } from '../todo-list-item/todo-list-item';
+import { useState } from 'react';
+import {
+	useRequestDeleteTodo,
+	useRequestUpdateTodo,
+	useRequestGetTodos,
+	useDebounce,
+} from '../../hooks';
+import { SortTodo, SearchTodo, TodoListItem } from '../../components';
 import styles from './todo-list.module.css';
 
-export const TodoList = () => {
-	const [todos, setTodos] = useState([]);
-	const [isLoading, setIsLoading] = useState(false);
+export const TodoList = ({ refreshTodosFlag, refreshTodos }) => {
+	const [searchValue, setSearchValue] = useState('');
+	const [isSorting, setIsSorting] = useState(false);
 
-	useEffect(() => {
-		setIsLoading(true);
+	const { todos, isLoading } = useRequestGetTodos(refreshTodosFlag, isSorting);
+	const { isUpdating, requestUpdateTodo } = useRequestUpdateTodo(refreshTodos);
+	const { isDeleting, requestDeleteTodo } = useRequestDeleteTodo(refreshTodos);
 
-		fetch('https://jsonplaceholder.typicode.com/todos')
-			.then((loadedData) => loadedData.json())
-			.then((loadedTodos) => {
-				setTodos(loadedTodos);
-			})
-			.finally(() => setIsLoading(false));
-	}, []);
+	const debouncedValue = useDebounce(searchValue, 1000);
+
+	const searchedTodos = debouncedValue
+		? todos.filter((todo) => todo?.title.toLowerCase().includes(searchValue))
+		: todos;
 
 	return (
-		<ol className={styles.list}>
-			{isLoading ? (
-				<div className={styles.loader}></div>
-			) : (
-				todos.map(({ id, title }) => (
-					<TodoListItem key={id}>{title}</TodoListItem>
-				))
-			)}
-		</ol>
+		<>
+			<h1>To do list:</h1>
+			<div className={styles.actions}>
+				<SearchTodo searchValue={searchValue} setSearchValue={setSearchValue} />
+				<SortTodo isSorting={isSorting} setIsSorting={setIsSorting} />
+			</div>
+			<ol className={styles.list}>
+				{isLoading ? (
+					<div className={styles.loader}></div>
+				) : (
+					searchedTodos.map(({ id, title, completed }) => (
+						<TodoListItem
+							key={id}
+							todoid={id}
+							completed={completed}
+							isUpdating={isUpdating}
+							requestUpdateTodo={requestUpdateTodo}
+							isDeleting={isDeleting}
+							requestDeleteTodo={requestDeleteTodo}
+						>
+							{title}
+						</TodoListItem>
+					))
+				)}
+			</ol>
+		</>
 	);
 };

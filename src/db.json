@@ -1,0 +1,34 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "title": "This is an important task",
+      "completed": false
+    },
+    {
+      "id": 2,
+      "title": "This is a very important task",
+      "completed": true
+    },
+    {
+      "id": 3,
+      "title": "This is a simple task",
+      "completed": true
+    },
+    {
+      "id": 4,
+      "title": "This is a task",
+      "completed": true
+    },
+    {
+      "title": "Add this app to firebase",
+      "completed": false,
+      "id": 5
+    },
+    {
+      "title": "Add sort",
+      "completed": false,
+      "id": 6
+    }
+  ]
+}

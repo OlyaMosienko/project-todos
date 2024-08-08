@@ -1,17 +1,21 @@
 import { useEffect, useState } from 'react';
+import { ref, onValue } from 'firebase/database';
+import { db } from '../firebase';
 
-export const useRequestGetTodos = (refreshTodosFlag, isSorting) => {
-	const [todos, setTodos] = useState([]);
-	const [isLoading, setIsLoading] = useState(false);
+export const useRequestGetTodos = () => {
+	const [todos, setTodos] = useState({});
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
-		setIsLoading(true);
+		const todosDbRef = ref(db, 'todos');
 
-		fetch(`http://localhost:3005/todos${isSorting ? '?_sort=title' : ''}`)
-			.then((loadedData) => loadedData.json())
-			.then((loadedTodos) => setTodos(loadedTodos))
-			.finally(() => setIsLoading(false));
-	}, [refreshTodosFlag, isSorting]);
+		return onValue(todosDbRef, (snapshot) => {
+			const loadedTodos = snapshot.val() || {};
+
+			setTodos(loadedTodos);
+			setIsLoading(false);
+		});
+	}, []);
 
 	return {
 		todos,

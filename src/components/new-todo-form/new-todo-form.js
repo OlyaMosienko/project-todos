@@ -2,12 +2,11 @@ import { useState } from 'react';
 import styles from './new-todo-form.module.css';
 import { useRequestAddANewTodo } from '../../hooks';
 
-export const NewTodoForm = ({ refreshTodos }) => {
+export const NewTodoForm = () => {
 	const [newTaskValue, setNewTaskValue] = useState('');
 	const { isCreating, requestAddANewTodo } = useRequestAddANewTodo(
 		newTaskValue,
 		setNewTaskValue,
-		refreshTodos,
 	);
 
 	return (

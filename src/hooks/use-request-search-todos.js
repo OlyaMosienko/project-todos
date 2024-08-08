@@ -1,31 +1,27 @@
 import { useEffect, useState } from 'react';
+import { ref, get, query, orderByChild, equalTo } from 'firebase/database';
+import { db } from '../firebase';
 
-export const useRequestSearchTodos = (refreshTodosFlag, searchValue) => {
-	const [searchedTodos, setSearchedTodos] = useState([]);
+export const useRequestSearchTodos = (searchValue) => {
+	const [searchedTodos, setSearchedTodos] = useState({});
 	const [isSearching, setIsSearching] = useState(false);
-
-	// const getFilteredTodos = (targetValue) => {
-	// 	if (!targetValue) return;
-
-	// 	const value = targetValue.toLowerCase();
-
-	// 	const filteredTodos = todos.filter((todo) =>
-	// 		todo?.title.toLowerCase().includes(value),
-	// 	);
-
-	// 	return filteredTodos;
-	// };
 
 	useEffect(() => {
 		setIsSearching(true);
 
-		fetch(`http://localhost:3005/todos?title=${searchValue}`)
-			.then((searchedData) => searchedData.json())
-			.then((searchedData) => {
-				setSearchedTodos(searchedData);
+		const searchedDbRef = ref(db, 'todos');
+		const q = query(searchedDbRef, orderByChild('title'), equalTo(searchValue));
+
+		get(q)
+			.then((snapshot) => {
+				if (snapshot.exists()) {
+					setSearchedTodos(snapshot.val());
+				} else {
+					console.log('No data available');
+				}
 			})
 			.finally(() => setIsSearching(false));
-	}, [refreshTodosFlag, searchValue]);
+	}, [searchValue]);
 
 	return {
 		searchedTodos,

@@ -1,18 +1,18 @@
 import { useState } from 'react';
+import { ref, remove } from 'firebase/database';
+import { db } from '../firebase';
 
-export const useRequestDeleteTodo = (refreshTodos) => {
+export const useRequestDeleteTodo = () => {
 	const [isDeleting, setIsDeleting] = useState(false);
 
 	const requestDeleteTodo = (id) => {
 		setIsDeleting(true);
 
-		fetch(`http://localhost:3005/todos/${id}`, {
-			method: 'DELETE',
-		})
-			.then((rawResponse) => rawResponse.json())
+		const todoToDeleteDbRef = ref(db, `todos/${id}`);
+
+		remove(todoToDeleteDbRef)
 			.then((response) => {
 				console.log('The task is deleted, the server response:', response);
-				refreshTodos();
 			})
 			.finally(() => {
 				setIsDeleting(false);

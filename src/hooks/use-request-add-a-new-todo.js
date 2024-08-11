@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { ref, push } from 'firebase/database';
-import { db } from '../firebase';
 
-export const useRequestAddANewTodo = (newTaskValue, setNewTaskValue) => {
+export const useRequestAddANewTodo = (newTaskValue, setNewTaskValue, refreshTodos) => {
 	const [isCreating, setIsCreating] = useState(false);
 
 	const requestAddANewTodo = (event) => {
@@ -10,14 +8,18 @@ export const useRequestAddANewTodo = (newTaskValue, setNewTaskValue) => {
 		setNewTaskValue('');
 		setIsCreating(true);
 
-		const todosDbRef = ref(db, 'todos');
-
-		push(todosDbRef, {
-			title: newTaskValue,
-			completed: false,
+		fetch('http://localhost:3005/todos', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json;charset=utf-8' },
+			body: JSON.stringify({
+				title: newTaskValue,
+				completed: false,
+			}),
 		})
+			.then((loadedData) => loadedData.json())
 			.then((loadedTodos) => {
 				console.log('The task is created, the server response:', loadedTodos);
+				refreshTodos();
 			})
 			.finally(() => {
 				setIsCreating(false);

@@ -8,25 +8,19 @@ import {
 import { SortTodo, SearchTodo, TodoListItem } from '../../components';
 import styles from './todo-list.module.css';
 
-export const TodoList = () => {
+export const TodoList = ({ refreshTodosFlag, refreshTodos }) => {
 	const [searchValue, setSearchValue] = useState('');
 	const [isSorting, setIsSorting] = useState(false);
 
-	const { todos, isLoading } = useRequestGetTodos();
-	const { isUpdating, requestUpdateTodo } = useRequestUpdateTodo();
-	const { isDeleting, requestDeleteTodo } = useRequestDeleteTodo();
+	const { todos, isLoading } = useRequestGetTodos(refreshTodosFlag, isSorting);
+	const { isUpdating, requestUpdateTodo } = useRequestUpdateTodo(refreshTodos);
+	const { isDeleting, requestDeleteTodo } = useRequestDeleteTodo(refreshTodos);
 
 	const debouncedValue = useDebounce(searchValue, 1000);
 
 	const searchedTodos = debouncedValue
-		? Object.values(todos).filter((todo) =>
-				todo?.title.toLowerCase().includes(searchValue),
-			)
+		? todos.filter((todo) => todo?.title.toLowerCase().includes(searchValue))
 		: todos;
-
-	const sortedTodos = isSorting
-		? Object.values(searchedTodos).sort((a, b) => a.title.localeCompare(b.title))
-		: searchedTodos;
 
 	return (
 		<>
@@ -39,7 +33,7 @@ export const TodoList = () => {
 				{isLoading ? (
 					<div className={styles.loader}></div>
 				) : (
-					Object.entries(sortedTodos).map(([id, { title, completed }]) => (
+					searchedTodos.map(({ id, title, completed }) => (
 						<TodoListItem
 							key={id}
 							todoid={id}

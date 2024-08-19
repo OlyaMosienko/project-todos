@@ -3,7 +3,6 @@
 	align-items: center;
 	gap: 10px;
 	width: 100%;
-	margin-bottom: 50px;
 }
 
 .input {
@@ -26,4 +25,9 @@
 .form-button:hover,
 .form-button:disabled {
 	opacity: 0.75;
+}
+
+.error {
+	margin-top: 10px;
+	color: rgb(183, 22, 22);
 }

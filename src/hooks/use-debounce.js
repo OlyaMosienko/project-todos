@@ -8,10 +8,9 @@ export const useDebounce = (value, delay) => {
 			setDebouncedValue(value);
 		}, delay);
 
-		return () => {
-			clearTimeout(handler);
-		};
-	}, [value, delay]);
+		return () => clearTimeout(handler);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [value]);
 
 	return debouncedValue;
 };

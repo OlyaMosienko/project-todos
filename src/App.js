@@ -3,18 +3,12 @@ import { NewTodoForm, TodoList } from './components';
 import styles from './App.module.css';
 
 export const App = () => {
-	const [refreshTodosFlag, setRefreshTodosFlag] = useState(false);
-
-	const refreshTodos = () => setRefreshTodosFlag(!refreshTodosFlag);
+	const [todos, setTodos] = useState([]);
 
 	return (
 		<div className={styles.app}>
-			<NewTodoForm refreshTodos={refreshTodos} />
-			<TodoList
-				refreshTodosFlag={refreshTodosFlag}
-				setRefreshTodosFlag={setRefreshTodosFlag}
-				refreshTodos={refreshTodos}
-			/>
+			<NewTodoForm todos={todos} setTodos={setTodos} />
+			<TodoList todos={todos} setTodos={setTodos} />
 		</div>
 	);
 };

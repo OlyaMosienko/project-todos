@@ -17,6 +17,15 @@
 	}
 }
 
+.content {
+	margin-top: 50px;
+}
+
+.error {
+	color: #a20606;
+	margin: 15px 0;
+}
+
 .list {
 	list-style-position: inside;
 	margin-top: 10px;

@@ -2,7 +2,7 @@
   "todos": [
     {
       "id": 1,
-      "title": "This is an important task",
+      "title": "This is an important tasK",
       "completed": false
     },
     {
@@ -16,18 +16,13 @@
       "completed": true
     },
     {
-      "id": 4,
-      "title": "This is a task",
-      "completed": true
-    },
-    {
-      "title": "Add this app to firebase",
+      "title": "Add routes",
       "completed": false,
       "id": 5
     },
     {
-      "title": "Add sort",
-      "completed": true,
+      "title": "Wow, what kind of task is it?",
+      "completed": false,
       "id": 6
     }
   ]

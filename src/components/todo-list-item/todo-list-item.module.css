@@ -1,4 +1,9 @@
 .item {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 15px;
+	width: 100%;
 	padding: 10px 0;
 }
 .item + .item {
@@ -7,12 +12,29 @@
 .item-updating {
 	opacity: 0.5;
 }
+
 .item-content {
-	display: inline-flex;
-	justify-content: space-between;
-	align-items: center;
-	gap: 15px;
-	width: 95%;
+	flex-grow: 1;
+	cursor: pointer;
+}
+
+.checkbox {
+	height: 30px;
+	width: 30px;
+}
+
+.input {
+	font-family: inherit;
+	font-size: inherit;
+	background: transparent;
+	outline: none;
+	border: 1px solid #00b0c7;
+	padding: 4px 7px;
+	width: 100%;
+}
+
+.done {
+	text-decoration: line-through;
 }
 
 .buttons {
@@ -25,7 +47,7 @@
 	border: none;
 	background: #571db4;
 	color: #fff;
-	padding: 7px;
+	padding: 6px;
 	cursor: pointer;
 }
 .completed {
@@ -37,4 +59,8 @@
 }
 .delete-todo-btn {
 	background: #7d7d7d;
+}
+
+.edit-todo-btn {
+	background: #00b0c7;
 }

@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useDebounce } from '../../hooks';
-import { SortTodo, SearchTodo, TodoListItem } from '../../components';
-import { fetchTodos, fetchDeleteTodo, fetchUpdateTodo } from '../../api/api';
-import { setTodoInTodos } from '../../utils';
+import { SortTodo, SearchTodo, NewTodoForm } from '../../components';
+import { fetchTodos } from '../../api';
 import styles from './todo-list.module.css';
+import { Link } from 'react-router-dom';
 
-export const TodoList = ({ todos, setTodos }) => {
+export const TodoList = () => {
+	const [todos, setTodos] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
 	const [searchValue, setSearchValue] = useState('');
 	const [isSorting, setIsSorting] = useState(false);
-	const [isLoading, setIsLoading] = useState(true);
-	const [isUpdating, setIsUpdating] = useState(false);
-	const [isDeleting, setIsDeleting] = useState(false);
 	const [error, setError] = useState('');
 
 	const debouncedValue = useDebounce(searchValue, 2000);
@@ -23,51 +22,6 @@ export const TodoList = ({ todos, setTodos }) => {
 		? searchedTodos.toSorted((a, b) => (a['title'] > b['title'] ? 1 : -1))
 		: searchedTodos;
 
-	const handleDeleteTodoBtn = (todoid) => {
-		setError('');
-		setIsDeleting(true);
-
-		fetchDeleteTodo(todoid)
-			.then((response) => {
-				console.log('The task is deleted, the server response:', response);
-				setTodos(todos.filter(({ id }) => id !== todoid));
-			})
-			.catch((e) => setError(e.message))
-			.finally(() => {
-				setIsDeleting(false);
-			});
-	};
-
-	const handleTodoTitleChange = (id, newTitle) => {
-		setError('');
-		setIsUpdating(true);
-
-		fetchUpdateTodo({ id, title: newTitle })
-			.then((response) => {
-				console.log('The task is updated, the server response:', response);
-				setTodos(setTodoInTodos(todos, { id, title: newTitle }));
-			})
-			.catch((e) => setError(e.message))
-			.finally(() => {
-				setIsUpdating(false);
-			});
-	};
-
-	const handleTodoCompletedChange = (id, newCompletedValue) => {
-		setError('');
-		setIsUpdating(true);
-
-		fetchUpdateTodo({ id, completed: newCompletedValue })
-			.then((response) => {
-				console.log('The task is updated, the server response:', response);
-				setTodos(setTodoInTodos(todos, { id, completed: newCompletedValue }));
-			})
-			.catch((e) => setError(e.message))
-			.finally(() => {
-				setIsUpdating(false);
-			});
-	};
-
 	useEffect(() => {
 		setError('');
 
@@ -77,36 +31,36 @@ export const TodoList = ({ todos, setTodos }) => {
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [setTodos]);
+	}, [setIsLoading, setTodos]);
 
 	return (
-		<div className={styles.content}>
-			<h1>To do list:</h1>
-			<div className={styles.actions}>
-				<SearchTodo searchValue={searchValue} setSearchValue={setSearchValue} />
-				<SortTodo isSorting={isSorting} setIsSorting={setIsSorting} />
+		<>
+			<NewTodoForm todos={todos} setTodos={setTodos} />
+			<div className={styles.content}>
+				<h1>To do list:</h1>
+				<div className={styles.actions}>
+					<SearchTodo
+						searchValue={searchValue}
+						setSearchValue={setSearchValue}
+					/>
+					<SortTodo isSorting={isSorting} setIsSorting={setIsSorting} />
+				</div>
+				<ol className={styles.list}>
+					{error ? <div className={styles.error}>{error}</div> : null}
+					{isLoading ? (
+						<div className="loader"></div>
+					) : (
+						sortedTodos.map(({ id, title, completed }) => (
+							<li className={styles.item} key={id}>
+								<Link className={styles['item-link']} to={`todo/${id}`}>
+									{title}
+								</Link>
+								{completed && <span>(done)</span>}
+							</li>
+						))
+					)}
+				</ol>
 			</div>
-			<ol className={styles.list}>
-				{error ? <div className={styles.error}>{error}</div> : null}
-				{isLoading ? (
-					<div className={styles.loader}></div>
-				) : (
-					sortedTodos.map(({ id, title, completed }) => (
-						<TodoListItem
-							key={id}
-							todoid={id}
-							completed={completed}
-							isUpdating={isUpdating}
-							isDeleting={isDeleting}
-							handleDeleteTodoBtn={handleDeleteTodoBtn}
-							handleTodoTitleChange={handleTodoTitleChange}
-							handleTodoCompletedChange={handleTodoCompletedChange}
-						>
-							{title}
-						</TodoListItem>
-					))
-				)}
-			</ol>
-		</div>
+		</>
 	);
 };

@@ -1,14 +1,19 @@
-import { useState } from 'react';
-import { NewTodoForm, TodoList } from './components';
-import styles from './App.module.css';
+import { Routes, Route } from 'react-router-dom';
+import { Header } from './components';
+import { MainPage, NotFound, TodoPage } from './pages';
 
 export const App = () => {
-	const [todos, setTodos] = useState([]);
-
 	return (
-		<div className={styles.app}>
-			<NewTodoForm todos={todos} setTodos={setTodos} />
-			<TodoList todos={todos} setTodos={setTodos} />
-		</div>
+		<>
+			<Header />
+			<div className="app">
+				<Routes>
+					<Route path="/" element={<MainPage />} />
+					<Route path="/todo/:id" element={<TodoPage />} />
+					<Route path="/404" element={<NotFound />} />
+					<Route path="*" element={<NotFound />} />
+				</Routes>
+			</div>
+		</>
 	);
 };

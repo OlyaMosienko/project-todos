@@ -1,29 +1,24 @@
 {
   "todos": [
     {
-      "id": 1,
-      "title": "This is an important tasK",
-      "completed": false
+      "title": "New todo \"Lorem ipsum, dolor sit amet consectetur adipisicing elit. Adipisci, veritatis+++\"",
+      "completed": true,
+      "id": 7
     },
     {
-      "id": 2,
-      "title": "This is a very important task",
-      "completed": true
-    },
-    {
-      "id": 3,
-      "title": "This is a simple task",
-      "completed": true
-    },
-    {
-      "title": "Add routes",
+      "title": "Add loader in todo page",
       "completed": false,
-      "id": 5
+      "id": 9
     },
     {
-      "title": "Wow, what kind of task is it?",
+      "title": "Rewrite todo app",
       "completed": false,
-      "id": 6
+      "id": 10
+    },
+    {
+      "title": "Very osmislennuy text o4en' dlinniy because nado check how it works",
+      "completed": true,
+      "id": 12
     }
   ]
 }

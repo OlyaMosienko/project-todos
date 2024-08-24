@@ -1,0 +1,13 @@
+.home-btn {
+	display: inline-block;
+	font-size: 16px;
+	font-weight: 500;
+	text-decoration: none;
+	color: inherit;
+	margin-top: 20px;
+	padding-bottom: 0.5px;
+	border-bottom: 1px dotted #000;
+}
+.home-btn:hover {
+	border-bottom: 1px solid #000;
+}

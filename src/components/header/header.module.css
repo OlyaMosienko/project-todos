@@ -1,0 +1,41 @@
+.header {
+	min-width: 700px;
+	background: #ececec;
+	padding: 10px 20px;
+}
+
+.nav-list {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	list-style-type: none;
+}
+
+.nav-link,
+.back-btn {
+	display: flex;
+	align-items: start;
+	gap: 7px;
+	color: inherit;
+	font-size: 16px;
+	font-weight: 500;
+	line-height: 1.1;
+	text-decoration: none;
+}
+
+.back-btn {
+	font-family: inherit;
+	border: none;
+	background: transparent;
+	cursor: pointer;
+}
+
+.nav-link span,
+.back-btn span {
+	padding-bottom: 0.5px;
+	border-bottom: 1px dotted #000;
+}
+.nav-link:hover span,
+.back-btn:hover span {
+	border-bottom: 1px solid #000;
+}

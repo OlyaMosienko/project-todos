@@ -9,6 +9,12 @@ export const fetchTodos = async () => {
 	return await response.json();
 };
 
+export const fetchTodo = async (id) => {
+	const response = await fetch(`${todosEndpoint + id}`);
+	if (!response.ok) throw new Error('Can not get todo. Please, try again later.');
+	return await response.json();
+};
+
 export const fetchUpdateTodo = async ({ id, title, completed }) => {
 	const response = await fetch(`${todosEndpoint + id}`, {
 		method: HTTP_METHOD.PATCH,

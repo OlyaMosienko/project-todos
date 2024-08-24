@@ -1,72 +1,123 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { fetchDeleteTodo, fetchUpdateTodo } from '../../api/api';
 import styles from './todo-list-item.module.css';
 
-export const TodoListItem = ({
-	children,
-	todoid,
-	completed,
-	isUpdating,
-	isDeleting,
-	handleDeleteTodoBtn,
-	handleTodoTitleChange,
-	handleTodoCompletedChange,
-}) => {
+export const TodoListItem = ({ id, children, completed, todo, setTodo }) => {
+	const [newTitle, setNewTitle] = useState(children);
 	const [completedTodoValue, setCompletedTodoValue] = useState(completed);
 	const [isEditingTodoTitle, setIsEditingTodoTitle] = useState(false);
-	const [newTitle, setNewTitle] = useState(children);
+	const [isUpdating, setIsUpdating] = useState(false);
+	const [isDeleting, setIsDeleting] = useState(false);
+	const [errorTodoMessage, setErrorTodoMessage] = useState('');
 
-	const onChangeTitle = ({ target }) => {
-		setNewTitle(target.value);
+	const navigate = useNavigate();
+
+	const handleDeleteTodoBtn = (id) => {
+		setErrorTodoMessage('');
+		setIsDeleting(true);
+
+		fetchDeleteTodo(id)
+			.then((response) => {
+				console.log('The task is deleted, the server response:', response);
+			})
+			.catch((e) => setErrorTodoMessage(e.message))
+			.finally(() => {
+				setIsDeleting(false);
+				navigate('/');
+			});
 	};
+
+	const handleTodoTitleChange = (id, newTitle) => {
+		setErrorTodoMessage('');
+		setIsUpdating(true);
+
+		fetchUpdateTodo({ id, title: newTitle })
+			.then((response) => {
+				console.log('The task is updated, the server response:', response);
+				setTodo({ ...todo, title: newTitle });
+			})
+			.catch((e) => setErrorTodoMessage(e.message))
+			.finally(() => {
+				setIsUpdating(false);
+			});
+	};
+
+	const handleTodoCompletedChange = (id, newCompletedValue) => {
+		setErrorTodoMessage('');
+		setIsUpdating(true);
+
+		fetchUpdateTodo({ id, completed: newCompletedValue })
+			.then((response) => {
+				console.log('The task is updated, the server response:', response);
+				setTodo({ ...todo, completed: newCompletedValue });
+			})
+			.catch((e) => setErrorTodoMessage(e.message))
+			.finally(() => {
+				setIsUpdating(false);
+			});
+	};
+
+	const onChangeTitle = ({ target }) => setNewTitle(target.value);
+
 	const onSaveTitleTodo = (id, newTitle) => {
 		setIsEditingTodoTitle(false);
 		handleTodoTitleChange(id, newTitle);
 	};
 
 	return (
-		<li className={styles.item + ` ${isUpdating ? styles['item-updating'] : ''}`}>
-			<input
-				className={styles.checkbox}
-				type="checkbox"
-				checked={completedTodoValue}
-				onChange={() => {
-					setCompletedTodoValue(!completedTodoValue);
-					handleTodoCompletedChange(todoid, !completedTodoValue);
-				}}
-			/>
+		<>
+			{errorTodoMessage ? (
+				<div className={styles.error}>{errorTodoMessage}</div>
+			) : null}
+
+			<h1>Todo #{id}</h1>
 			<div
-				className={styles['item-content']}
-				onClick={() => setIsEditingTodoTitle(true)}
+				className={styles.item + ` ${isUpdating ? styles['item-updating'] : ''}`}
 			>
-				{isEditingTodoTitle ? (
+				<div className={styles.buttons}>
 					<input
-						className={styles.input}
-						type="text"
-						value={newTitle}
-						onChange={onChangeTitle}
+						className={styles.checkbox}
+						type="checkbox"
+						checked={completedTodoValue}
+						onChange={() => {
+							setCompletedTodoValue(!completedTodoValue);
+							handleTodoCompletedChange(id, !completedTodoValue);
+						}}
 					/>
-				) : (
-					<span className={completed ? styles.done : ''}>{newTitle}</span>
-				)}
-			</div>
-			<div className={styles.buttons}>
-				{isEditingTodoTitle ? (
+					{isEditingTodoTitle ? (
+						<button
+							className={`${styles.button} ${styles['edit-todo-btn']}`}
+							disabled={isDeleting}
+							onClick={() => onSaveTitleTodo(id, newTitle)}
+						>
+							Save
+						</button>
+					) : null}
 					<button
-						className={`${styles.button} ${styles['edit-todo-btn']}`}
+						className={`${styles.button} ${styles['delete-todo-btn']}`}
 						disabled={isDeleting}
-						onClick={() => onSaveTitleTodo(todoid, newTitle)}
+						onClick={() => handleDeleteTodoBtn(id)}
 					>
-						Save
+						Delete
 					</button>
-				) : null}
-				<button
-					className={`${styles.button} ${styles['delete-todo-btn']}`}
-					disabled={isDeleting}
-					onClick={() => handleDeleteTodoBtn(todoid)}
+				</div>
+				<div
+					className={styles['item-content']}
+					onClick={() => setIsEditingTodoTitle(true)}
 				>
-					Delete
-				</button>
+					{isEditingTodoTitle ? (
+						<input
+							className={styles.input}
+							type="text"
+							value={newTitle}
+							onChange={onChangeTitle}
+						/>
+					) : (
+						<span className={completed ? styles.done : ''}>{newTitle}</span>
+					)}
+				</div>
 			</div>
-		</li>
+		</>
 	);
 };

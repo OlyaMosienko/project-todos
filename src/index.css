@@ -13,3 +13,30 @@ body {
 	background: #040024;
 	min-height: 100vh;
 }
+
+.app {
+	max-width: 700px;
+	background: #ececec;
+	margin-top: 50px;
+	margin-bottom: 50px;
+	padding: 20px;
+}
+
+.loader {
+	width: 25px;
+	height: 25px;
+	margin: 10px auto;
+	border: 5px solid gray;
+	border-radius: 50%;
+	border-left-color: transparent;
+	animation: loader 1s infinite;
+}
+
+@keyframes loader {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}

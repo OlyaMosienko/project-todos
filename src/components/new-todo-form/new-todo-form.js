@@ -1,8 +1,10 @@
-import { useState } from 'react';
-import styles from './new-todo-form.module.css';
+import { useState, useContext } from 'react';
+import { AppContext } from '../../context';
 import { fetchCreateTodo } from '../../api/api';
+import styles from './new-todo-form.module.css';
 
-export const NewTodoForm = ({ todos, setTodos }) => {
+export const NewTodoForm = () => {
+	const { dispatch } = useContext(AppContext);
 	const [newTaskValue, setNewTaskValue] = useState('');
 	const [isCreating, setIsCreating] = useState(false);
 	const [newTodoError, setNewTodoError] = useState('');
@@ -15,13 +17,14 @@ export const NewTodoForm = ({ todos, setTodos }) => {
 		fetchCreateTodo(newTaskValue)
 			.then((createdTodo) => {
 				console.log('The task is created, the server response:', createdTodo);
-				setTodos([...todos, createdTodo]);
+				dispatch({ type: 'CREATE_NEW_TODO_IN_TODOS', payload: createdTodo });
 			})
 			.catch((e) => setNewTodoError(e))
 			.finally(() => {
 				setIsCreating(false);
 			});
 	};
+
 	const onChange = ({ target }) => {
 		if (target.value.trim().length === 0) {
 			setNewTodoError('Can not create empty todo.');
@@ -30,6 +33,7 @@ export const NewTodoForm = ({ todos, setTodos }) => {
 		}
 		setNewTaskValue(target.value);
 	};
+
 	const onBlur = () => setNewTodoError('');
 
 	return (

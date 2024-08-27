@@ -1,14 +1,22 @@
 import { useState } from 'react';
-import { NewTodoForm, TodoList } from './components';
+import { AppContext } from './context';
+import { TodoList } from './components';
+import { reducer } from './utils';
 import styles from './App.module.css';
 
 export const App = () => {
 	const [todos, setTodos] = useState([]);
 
+	const dispatch = (action) => {
+		const newState = reducer(todos, action);
+		setTodos(newState);
+	};
+
 	return (
-		<div className={styles.app}>
-			<NewTodoForm todos={todos} setTodos={setTodos} />
-			<TodoList todos={todos} setTodos={setTodos} />
-		</div>
+		<AppContext.Provider value={{ todos, dispatch }}>
+			<div className={styles.app}>
+				<TodoList />
+			</div>
+		</AppContext.Provider>
 	);
 };

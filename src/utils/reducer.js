@@ -17,6 +17,6 @@ export const reducer = (state, action) => {
 			return [...state, payload];
 		}
 		default:
-		// ничего не делать
+			return payload;
 	}
 };

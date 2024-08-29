@@ -1,4 +1,4 @@
-import { setTodoInTodos } from './set-todo-in-todos';
+import { setTodoInTodos } from './utils/set-todo-in-todos';
 
 export const reducer = (state, action) => {
 	const { type, payload } = action;

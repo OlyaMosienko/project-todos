@@ -1,34 +1,29 @@
 {
   "todos": [
     {
-      "id": 2,
-      "title": "This is a very important task",
-      "completed": true
-    },
-    {
-      "title": "Wow, what kind of task is it?",
+      "title": "Bla bla task #111",
       "completed": false,
-      "id": 6
-    },
-    {
-      "title": "Add context",
-      "completed": true,
-      "id": 7
-    },
-    {
-      "title": "New Todo",
-      "completed": false,
-      "id": 8
+      "id": 14
     },
     {
       "title": "There could be some normal text for todo",
-      "completed": false,
-      "id": 9
+      "completed": true,
+      "id": 15
     },
     {
-      "title": "Go to swimming pool",
+      "title": "This is a very important todo #2",
+      "completed": false,
+      "id": 16
+    },
+    {
+      "title": "Just text",
       "completed": true,
-      "id": 10
+      "id": 17
+    },
+    {
+      "title": "New todo",
+      "completed": false,
+      "id": 18
     }
   ]
 }

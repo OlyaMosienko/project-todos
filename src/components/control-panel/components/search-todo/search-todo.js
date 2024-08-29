@@ -1,6 +1,9 @@
+import { useTodosContext } from '../../../../context';
 import styles from './search-todo.module.css';
 
-export const SearchTodo = ({ searchValue, setSearchValue }) => {
+export const SearchTodo = () => {
+	const { searchValue, setSearchValue } = useTodosContext();
+
 	return (
 		<input
 			className={styles.input}

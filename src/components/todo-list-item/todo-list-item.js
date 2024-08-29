@@ -1,27 +1,19 @@
 import { useState } from 'react';
+import { useTodosContext } from '../../context';
+import { EditingTitleTodo } from '../editing-title-todo/editing-title-todo';
 import styles from './todo-list-item.module.css';
 
-export const TodoListItem = ({
-	children,
-	todoid,
-	completed,
-	isUpdating,
-	isDeleting,
-	handleDeleteTodoBtn,
-	handleTodoTitleChange,
-	handleTodoCompletedChange,
-}) => {
-	const [completedTodoValue, setCompletedTodoValue] = useState(completed);
-	const [isEditingTodoTitle, setIsEditingTodoTitle] = useState(false);
-	const [newTitle, setNewTitle] = useState(children);
+export const TodoListItem = ({ id, title, completed }) => {
+	const {
+		isUpdating,
+		handleDeleteTodoBtn,
+		handleTodoCompletedChange,
+		isEditingTitleTodoID,
+		setIsEditingTodoTitle,
+		onSubmitNewTitleTodo,
+	} = useTodosContext();
 
-	const onChangeTitle = ({ target }) => {
-		setNewTitle(target.value);
-	};
-	const onSaveTitleTodo = (id, newTitle) => {
-		setIsEditingTodoTitle(false);
-		handleTodoTitleChange(id, newTitle);
-	};
+	const [completedTodoValue, setCompletedTodoValue] = useState(completed);
 
 	return (
 		<li className={styles.item + ` ${isUpdating ? styles['item-updating'] : ''}`}>
@@ -31,42 +23,33 @@ export const TodoListItem = ({
 				checked={completedTodoValue}
 				onChange={() => {
 					setCompletedTodoValue(!completedTodoValue);
-					handleTodoCompletedChange(todoid, !completedTodoValue);
+					handleTodoCompletedChange(id, !completedTodoValue);
 				}}
 			/>
-			<div
-				className={styles['item-content']}
-				onClick={() => setIsEditingTodoTitle(true)}
-			>
-				{isEditingTodoTitle ? (
-					<input
-						className={styles.input}
-						type="text"
-						value={newTitle}
-						onChange={onChangeTitle}
-					/>
-				) : (
-					<span className={completed ? styles.done : ''}>{newTitle}</span>
-				)}
-			</div>
-			<div className={styles.buttons}>
-				{isEditingTodoTitle ? (
-					<button
-						className={`${styles.button} ${styles['edit-todo-btn']}`}
-						disabled={isDeleting}
-						onClick={() => onSaveTitleTodo(todoid, newTitle)}
+			{isEditingTitleTodoID[id] ? (
+				<EditingTitleTodo
+					id={id}
+					title={title}
+					setIsEditingTodoTitle={setIsEditingTodoTitle}
+					onSubmitNewTitleTodo={onSubmitNewTitleTodo}
+				/>
+			) : (
+				<>
+					<div
+						className={styles['item-content']}
+						onClick={() => setIsEditingTodoTitle(id, true)}
 					>
-						Save
+						<span className={completed ? styles.done : ''}>{title}</span>
+					</div>
+					<button
+						className={`${styles.button} ${styles['delete-todo-btn']}`}
+						disabled={isUpdating}
+						onClick={() => handleDeleteTodoBtn(id)}
+					>
+						Delete
 					</button>
-				) : null}
-				<button
-					className={`${styles.button} ${styles['delete-todo-btn']}`}
-					disabled={isDeleting}
-					onClick={() => handleDeleteTodoBtn(todoid)}
-				>
-					Delete
-				</button>
-			</div>
+				</>
+			)}
 		</li>
 	);
 };

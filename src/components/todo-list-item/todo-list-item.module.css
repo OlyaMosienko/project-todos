@@ -23,6 +23,12 @@
 	width: 30px;
 }
 
+.edit {
+	display: flex;
+	gap: 5px;
+	flex-grow: 1;
+}
+
 .input {
 	font-family: inherit;
 	font-size: inherit;
@@ -49,9 +55,6 @@
 	color: #fff;
 	padding: 6px;
 	cursor: pointer;
-}
-.completed {
-	background: limegreen;
 }
 .button:hover,
 .button:disabled {

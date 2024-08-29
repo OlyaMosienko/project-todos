@@ -1,0 +1,27 @@
+.edit {
+	display: flex;
+	gap: 5px;
+	flex-grow: 1;
+}
+
+.input {
+	font-family: inherit;
+	font-size: inherit;
+	background: transparent;
+	outline: none;
+	border: 1px solid #00b0c7;
+	padding: 4px 7px;
+	width: 100%;
+}
+
+.button {
+	font-family: inherit;
+	border: none;
+	background: #571db4;
+	color: #fff;
+	padding: 6px;
+	cursor: pointer;
+}
+.edit-todo-btn {
+	background: #00b0c7;
+}

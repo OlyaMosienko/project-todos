@@ -11,7 +11,7 @@ export const reducer = (state, action) => {
 			return state.filter(({ id }) => id !== payload);
 		}
 		case 'UPDATE_TODO_IN_TODOS': {
-			return setTodoInTodos(state, payload);
+			return [setTodoInTodos(state, payload)];
 		}
 		case 'CREATE_NEW_TODO_IN_TODOS': {
 			return [...state, payload];

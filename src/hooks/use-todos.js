@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { reducer } from '../reducer';
+import { setTodoInTodos } from '../utils';
 import { useDebounce } from './use-debounce';
 import {
 	fetchCreateTodo,
@@ -15,16 +15,10 @@ export const useTodos = () => {
 	const [isCreating, setIsCreating] = useState(false);
 	const [isSorting, setIsSorting] = useState(false);
 	const [searchValue, setSearchValue] = useState('');
-	const [isEditingTitleTodoID, setIsEditingTitleTodoID] = useState({});
+	const [editingTitleTodoID, setEditingTitleTodoID] = useState(null);
 	const [error, setError] = useState('');
 	const [selectedOrder, setSelectedOrder] = useState('default');
 	const [newTaskValue, setNewTaskValue] = useState('');
-
-	// eslint-disable-next-line react-hooks/exhaustive-deps
-	const dispatch = (action) => {
-		const newState = reducer(todos, action);
-		setTodos(newState);
-	};
 
 	const debouncedValue = useDebounce(searchValue, 2000);
 
@@ -41,7 +35,7 @@ export const useTodos = () => {
 		fetchDeleteTodo(id)
 			.then((response) => {
 				console.log('The task is deleted, the server response:', response);
-				dispatch({ type: 'DELETE_TODO_IN_TODOS', payload: id });
+				setTodos(todos.filter(({ id: todoid }) => id !== todoid));
 			})
 			.catch((e) => setError(e.message))
 			.finally(() => {
@@ -56,10 +50,7 @@ export const useTodos = () => {
 		fetchUpdateTodo({ id, title: newTitle })
 			.then((response) => {
 				console.log('The task is updated, the server response:', response);
-				dispatch({
-					type: 'UPDATE_TODO_IN_TODOS',
-					payload: { id, title: newTitle },
-				});
+				setTodos(setTodoInTodos(todos, { id, title: newTitle }));
 			})
 			.catch((e) => setError(e.message))
 			.finally(() => {
@@ -74,10 +65,7 @@ export const useTodos = () => {
 		fetchUpdateTodo({ id, completed: newCompletedValue })
 			.then((response) => {
 				console.log('The task is updated, the server response:', response);
-				dispatch({
-					type: 'UPDATE_TODO_IN_TODOS',
-					payload: { id, completed: newCompletedValue },
-				});
+				setTodos(setTodoInTodos(todos, { id, completed: newCompletedValue }));
 			})
 			.catch((e) => setError(e.message))
 			.finally(() => {
@@ -85,16 +73,10 @@ export const useTodos = () => {
 			});
 	};
 
-	const setIsEditingTodoTitle = (id, value) => {
-		console.log(id, value);
-
-		setIsEditingTitleTodoID((prev) => ({ ...prev, [id]: value }));
-	};
-
 	const onSubmitNewTitleTodo = (event, id, newTitle) => {
 		event.preventDefault();
-		setIsEditingTodoTitle(id, false);
 		handleTodoTitleChange(id, newTitle);
+		setEditingTitleTodoID(null);
 	};
 
 	const onSelectedOrder = ({ target }) => {
@@ -110,7 +92,7 @@ export const useTodos = () => {
 		fetchCreateTodo(newTaskValue.trim())
 			.then((createdTodo) => {
 				console.log('The task is created, the server response:', createdTodo);
-				dispatch({ type: 'CREATE_NEW_TODO_IN_TODOS', payload: createdTodo });
+				setTodos([...todos, createdTodo]);
 			})
 			.catch((e) => setError(e))
 			.finally(() => {
@@ -122,12 +104,12 @@ export const useTodos = () => {
 		setError('');
 
 		fetchTodos()
-			.then((loadedTodos) => dispatch({ type: 'SET_TODOS', payload: loadedTodos }))
+			.then((loadedTodos) => setTodos(loadedTodos))
 			.catch((e) => setError(e.message))
 			.finally(() => {
 				setIsLoading(false);
 			});
-	}, [dispatch]);
+	}, []);
 
 	return {
 		todos: searchedTodos,
@@ -136,8 +118,8 @@ export const useTodos = () => {
 		isLoading,
 		isUpdating,
 		isCreating,
-		isEditingTitleTodoID,
-		setIsEditingTodoTitle,
+		editingTitleTodoID,
+		setEditingTitleTodoID,
 		error,
 		selectedOrder,
 		newTaskValue,

@@ -1,19 +1,10 @@
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
+import { useTodosContext } from '../../context';
 import styles from './editing-title-todo.module.css';
 
-export const EditingTitleTodo = ({
-	id,
-	title,
-	setIsEditingTodoTitle,
-	onSubmitNewTitleTodo,
-}) => {
+export const EditingTitleTodo = ({ id, title }) => {
 	const [newTitle, setNewTitle] = useState(title);
-
-	const ref = useRef(null);
-
-	useEffect(() => {
-		ref.current.focus();
-	}, []);
+	const { setEditingTitleTodoID, onSubmitNewTitleTodo } = useTodosContext();
 
 	const onChangeTitle = ({ target }) => setNewTitle(target.value);
 
@@ -27,7 +18,7 @@ export const EditingTitleTodo = ({
 				type="text"
 				value={newTitle}
 				onChange={onChangeTitle}
-				ref={ref}
+				autoFocus={true}
 			/>
 			<button
 				type="submit"
@@ -38,7 +29,7 @@ export const EditingTitleTodo = ({
 			<button
 				type="button"
 				className={styles.button}
-				onClick={() => setIsEditingTodoTitle(id, false)}
+				onClick={() => setEditingTitleTodoID(null)}
 			>
 				Cancel
 			</button>

@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { TodosProvider } from './context';
+import { Provider } from 'react-redux';
+import { store } from './store';
 import { App } from './App';
 import './index.css';
 
@@ -8,8 +9,8 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
 	<React.StrictMode>
-		<TodosProvider>
+		<Provider store={store}>
 			<App />
-		</TodosProvider>
+		</Provider>
 	</React.StrictMode>,
 );

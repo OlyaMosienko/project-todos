@@ -1,16 +1,13 @@
 import { useState } from 'react';
-import { useTodosContext } from '../../context';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectIsUpdating } from '../../selectors';
+import { deleteTodo, setEditingTitleTodoID, updateTodo } from '../../actions';
 import styles from './todo-list-item.module.css';
 
 export const TodoListItem = ({ id, title, completed }) => {
-	const {
-		isUpdating,
-		handleDeleteTodoBtn,
-		handleTodoCompletedChange,
-		setEditingTitleTodoID,
-	} = useTodosContext();
-
 	const [completedTodoValue, setCompletedTodoValue] = useState(completed);
+	const isUpdating = useSelector(selectIsUpdating);
+	const dispatch = useDispatch();
 
 	return (
 		<li className={styles.item + ` ${isUpdating ? styles['item-updating'] : ''}`}>
@@ -20,19 +17,19 @@ export const TodoListItem = ({ id, title, completed }) => {
 				checked={completedTodoValue}
 				onChange={() => {
 					setCompletedTodoValue(!completedTodoValue);
-					handleTodoCompletedChange(id, !completedTodoValue);
+					dispatch(updateTodo({ id, title, completed: !completedTodoValue }));
 				}}
 			/>
 			<div
 				className={styles['item-content']}
-				onClick={() => setEditingTitleTodoID(id)}
+				onClick={() => dispatch(setEditingTitleTodoID(id))}
 			>
-				<span className={completed ? styles.done : ''}>{title}</span>
+				<span>{title}</span>
 			</div>
 			<button
 				className={`${styles.button} ${styles['delete-todo-btn']}`}
 				disabled={isUpdating}
-				onClick={() => handleDeleteTodoBtn(id)}
+				onClick={() => dispatch(deleteTodo(id))}
 			>
 				Delete
 			</button>

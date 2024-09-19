@@ -1,15 +1,29 @@
-import { useTodosContext } from '../../../../context';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectIsCreating } from '../../../../selectors';
+import { createTodo } from '../../../../actions';
 import styles from './new-todo-form.module.css';
 
 export const NewTodoForm = () => {
-	const { newTaskValue, setNewTaskValue, onSubmitNewTodo, isCreating } =
-		useTodosContext();
+	const [newTaskValue, setNewTaskValue] = useState('');
 
+	const isCreating = useSelector(selectIsCreating);
+	const dispatch = useDispatch();
+
+	const onSubmitNewTodo = (event, newTaskValue) => {
+		event.preventDefault();
+		setNewTaskValue('');
+
+		dispatch(createTodo(newTaskValue));
+	};
 	const onChange = ({ target }) => setNewTaskValue(target.value);
 
 	return (
 		<>
-			<form className={styles.form} onSubmit={onSubmitNewTodo}>
+			<form
+				className={styles.form}
+				onSubmit={(event) => onSubmitNewTodo(event, newTaskValue)}
+			>
 				<input
 					className={styles.input}
 					type="text"

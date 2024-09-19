@@ -1,11 +1,17 @@
 import { useState } from 'react';
-import { useTodosContext } from '../../context';
 import styles from './editing-title-todo.module.css';
+import { useDispatch } from 'react-redux';
+import { setEditingTitleTodoID, updateTodo } from '../../actions';
 
 export const EditingTitleTodo = ({ id, title }) => {
 	const [newTitle, setNewTitle] = useState(title);
-	const { setEditingTitleTodoID, onSubmitNewTitleTodo } = useTodosContext();
 
+	const dispatch = useDispatch();
+	const onSubmitNewTitleTodo = (event, id, newTitle) => {
+		event.preventDefault();
+		dispatch(updateTodo({ id, title: newTitle }));
+		dispatch(setEditingTitleTodoID(null));
+	};
 	const onChangeTitle = ({ target }) => setNewTitle(target.value);
 
 	return (
@@ -29,7 +35,7 @@ export const EditingTitleTodo = ({ id, title }) => {
 			<button
 				type="button"
 				className={styles.button}
-				onClick={() => setEditingTitleTodoID(null)}
+				onClick={() => dispatch(setEditingTitleTodoID(null))}
 			>
 				Cancel
 			</button>

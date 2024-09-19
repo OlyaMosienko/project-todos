@@ -1,8 +1,8 @@
 {
   "todos": [
     {
-      "title": "Bla bla task #1",
-      "completed": false,
+      "title": "Bla bla task #111",
+      "completed": true,
       "id": 14
     },
     {
@@ -11,13 +11,13 @@
       "id": 15
     },
     {
-      "title": "This is a very important todo #1",
-      "completed": true,
+      "title": "This is a very important todo",
+      "completed": false,
       "id": 16
     },
     {
       "title": "New todo",
-      "completed": false,
+      "completed": true,
       "id": 18
     },
     {
@@ -26,14 +26,9 @@
       "id": 19
     },
     {
-      "title": "Norm text",
-      "completed": true,
-      "id": 21
-    },
-    {
-      "title": "Tadaaaaaa",
+      "title": "Create someone",
       "completed": false,
-      "id": 22
+      "id": 20
     }
   ]
 }
